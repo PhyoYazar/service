@@ -1,9 +1,16 @@
+
+## Keep in mind
+- [important] => changed "kubectl" to "kubectl.docker"
+
+#================================================================================================
+
 go mod init github.com/PhyoYazar/service
 
 go mod tidy
 
 go mod vendor
 
-# Quotes
+#================================================================================================
+## Quotes
 
 - we write the packages that provide, not contain!

@@ -39,9 +39,9 @@ dev-up-local:
 		--name $(KIND_CLUSTER) \
 		--config zarf/k8s/dev/kind-config.yaml
 
-	kubectl wait --timeout=120s --namespace=local-path-storage --for=condition=Available deployment/local-path-provisioner
+	kubectl.docker wait --timeout=120s --namespace=local-path-storage --for=condition=Available deployment/local-path-provisioner
 
-dev-up: dev-up-local 
+dev-up: dev-up-local
 
 dev-down-local:
 	kind delete cluster --name $(KIND_CLUSTER)
@@ -52,9 +52,9 @@ dev-down:
 # ------------------------------------------------------------------------------
 
 dev-status:
-	kubectl get nodes -o wide
-	kubectl get svc -o wide
-	kubectl get pods -o wide --watch --all-namespaces
+	kubectl.docker get nodes -o wide
+	kubectl.docker get svc -o wide
+	kubectl.docker get pods -o wide --watch --all-namespaces
 
 # ==============================================================================
 
