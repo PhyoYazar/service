@@ -1,6 +1,6 @@
 module github.com/PhyoYazar/service
 
-go 1.21.6
+go 1.21
 
 require go.uber.org/zap v1.26.0
 
