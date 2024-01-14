@@ -62,12 +62,31 @@ dev-down-local:
 dev-down:
 	kind delete cluster --name $(KIND_CLUSTER)
 
+dev-load:
+	kind load docker-image $(SERVICE_IMAGE) --name $(KIND_CLUSTER)
+
+dev-apply:
+	kustomize build zarf/k8s/dev/sales | kubectl.docker apply -f -
+	kubectl.docker wait pods --namespace=$(NAMESPACE) --selector app=$(APP) --for=condition=Ready
+
 # ------------------------------------------------------------------------------
 
 dev-status:
 	kubectl.docker get nodes -o wide
 	kubectl.docker get svc -o wide
 	kubectl.docker get pods -o wide --watch --all-namespaces
+
+dev-restart:
+	kubectl.docker rollout restart deployment $(APP) --namespace=$(NAMESPACE)
+
+dev-update: all dev-load dev-restart
+
+dev-update-apply: all dev-load dev-apply
+
+# ------------------------------------------------------------------------------
+
+dev-logs:
+	kubectl.docker logs --namespace=$(NAMESPACE) -l app=$(APP) --all-containers=true -f --tail=100
 
 # ==============================================================================
 
