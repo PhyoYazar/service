@@ -88,10 +88,19 @@ dev-update-apply: all dev-load dev-apply
 dev-logs:
 	kubectl.docker logs --namespace=$(NAMESPACE) -l app=$(APP) --all-containers=true -f --tail=100
 
+dev-describe-deployment:
+	kubectl.docker describe deployment --namespace=$(NAMESPACE) $(APP)
+
+dev-describe-sales:
+	kubectl.docker describe pod --namespace=$(NAMESPACE) -l app=$(APP)
+
 # ==============================================================================
 
 run-local:
 	go run app/services/sales-api/main.go
+
+run-local-help:
+	go run app/services/sales-api/main.go --help
 
 tidy:
 	go mod tidy
