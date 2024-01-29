@@ -54,12 +54,17 @@ dev-up-local:
 
 	kubectl.docker wait --timeout=120s --namespace=local-path-storage --for=condition=Available deployment/local-path-provisioner
 
+	kind load docker-image $(TELEPRESENCE) --name $(KIND_CLUSTER)
+
 dev-up: dev-up-local
+	telepresence --context=kind-$(KIND_CLUSTER) helm install
+	telepresence --context=kind-$(KIND_CLUSTER) connect
 
 dev-down-local:
 	kind delete cluster --name $(KIND_CLUSTER)
 
 dev-down:
+	telepresence quit -s
 	kind delete cluster --name $(KIND_CLUSTER)
 
 dev-load:
@@ -69,7 +74,7 @@ dev-apply:
 	kustomize build zarf/k8s/dev/sales | kubectl.docker apply -f -
 	kubectl.docker wait pods --namespace=$(NAMESPACE) --selector app=$(APP) --for=condition=Ready
 
-# ------------------------------------------------------------------------------
+# -- ----------------------------------------------------------------------------
 
 dev-status:
 	kubectl.docker get nodes -o wide
