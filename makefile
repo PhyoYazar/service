@@ -46,6 +46,11 @@ service:
 # ==============================================================================
 # Running from within k8s/kind
 
+dev-pyz:
+	kind load docker-image $(TELEPRESENCE) --name $(KIND_CLUSTER)
+	telepresence --context=kind-$(KIND_CLUSTER) helm install
+	telepresence --context=kind-$(KIND_CLUSTER) connect
+
 dev-up-local:
 	kind create cluster \
 		--image $(KIND) \
@@ -114,5 +119,14 @@ tidy:
 # ==============================================================================
 # Metrics and Tracing
 
+metrics-view:
+	expvarmon -ports="$(SERVICE_NAME).$(NAMESPACE).svc.cluster.local:4000" -vars="build,requests,goroutines,errors,panics,mem:memstats.Alloc"
+
 metrics-view-local:
 	expvarmon -ports="localhost:4000" -vars="build,requests,goroutines,errors,panics,mem:memstats.Alloc"
+
+test-endpoint:
+	curl -il $(SERVICE_NAME).$(NAMESPACE).svc.cluster.local:4000/debug/vars
+
+test-endpoint-local:
+	curl -il localhost:4000/debug/vars
