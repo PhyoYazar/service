@@ -32,5 +32,5 @@ func APIMux(cfg APIMuxConfig) http.Handler {
 
 	mux.Handle(http.MethodGet, "/test", h )
 
-	return nil
+	return mux
 }
