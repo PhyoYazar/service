@@ -1,11 +1,12 @@
 package testgrp
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 )
 
-func Test(w http.ResponseWriter, r *http.Request) {
+func Test(ctx context.Context,w http.ResponseWriter, r *http.Request) error {
 
 	// 1. Validate the data
 	// 2. Call into the business layer
@@ -18,5 +19,5 @@ func Test(w http.ResponseWriter, r *http.Request) {
 		Status: "Ok",
 	}
 
-	json.NewEncoder(w).Encode(status)
+	return json.NewEncoder(w).Encode(status)
 }

@@ -1,11 +1,12 @@
 package handlers
 
 import (
+	"context"
 	"net/http"
 	"os"
 
 	"github.com/PhyoYazar/service/app/services/sales-api/handlers/v1/testgrp"
-	"github.com/dimfeld/httptreemux/v5"
+	"github.com/PhyoYazar/service/foundation/web"
 	"go.uber.org/zap"
 )
 
@@ -16,11 +17,15 @@ type APIMuxConfig struct {
 	Log      *zap.SugaredLogger
 }
 
+// A Handler is a type that handles a http request within our own little mini
+// framework.
+type Handler func(ctx context.Context, w http.ResponseWriter, r *http.Request) error
+
 // APIMux constructs a http.Handler with all application routes defined.
-func APIMux(cfg APIMuxConfig) * httptreemux.ContextMux {
-	mux := httptreemux.NewContextMux()
+func APIMux(cfg APIMuxConfig) * web.App {
+	app := web.NewApp(cfg.Shutdown)
 
-	mux.Handle(http.MethodGet, "/test", testgrp.Test )
+	app.Handle(http.MethodGet, "/test", testgrp.Test )
 
-	return mux
+	return app
 }
