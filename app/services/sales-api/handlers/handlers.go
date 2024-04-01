@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/PhyoYazar/service/app/services/sales-api/handlers/v1/testgrp"
+	"github.com/PhyoYazar/service/business/web/v1/mid"
 	"github.com/PhyoYazar/service/foundation/web"
 	"go.uber.org/zap"
 )
@@ -23,7 +24,7 @@ type Handler func(ctx context.Context, w http.ResponseWriter, r *http.Request) e
 
 // APIMux constructs a http.Handler with all application routes defined.
 func APIMux(cfg APIMuxConfig) * web.App {
-	app := web.NewApp(cfg.Shutdown)
+	app := web.NewApp(cfg.Shutdown, mid.Logger(cfg.Log))
 
 	app.Handle(http.MethodGet, "/test", testgrp.Test )
 
