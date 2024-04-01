@@ -6,12 +6,13 @@ import (
 	"math/rand"
 	"net/http"
 
+	v1 "github.com/PhyoYazar/service/business/web/v1"
 	"github.com/PhyoYazar/service/foundation/web"
 )
 
 func Test(ctx context.Context,w http.ResponseWriter, r *http.Request) error {
 	if n := rand.Intn(100); n%2 == 0 {
-		return errors.New("UNTRUSTED ERROR")
+		return v1.NewRequestError(errors.New("TRUSTED ERROR"), http.StatusBadRequest)
 	 }
 
 	// 1. Validate the data
