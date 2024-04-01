@@ -2,8 +2,9 @@ package testgrp
 
 import (
 	"context"
-	"encoding/json"
 	"net/http"
+
+	"github.com/PhyoYazar/service/foundation/web"
 )
 
 func Test(ctx context.Context,w http.ResponseWriter, r *http.Request) error {
@@ -19,5 +20,5 @@ func Test(ctx context.Context,w http.ResponseWriter, r *http.Request) error {
 		Status: "Ok",
 	}
 
-	return json.NewEncoder(w).Encode(status)
+	return web.Respond(ctx, w, status, http.StatusOK)
 }
