@@ -140,7 +140,7 @@ func run(log *zap.SugaredLogger) error {
 	apiMux := handlers.APIMux(handlers.APIMuxConfig{
 		Shutdown: shutdown,
 		Log:      log,
-		Auth: 	 auth
+		Auth: 	 auth,
 	})
 
 	api := http.Server{
