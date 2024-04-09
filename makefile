@@ -83,6 +83,7 @@ dev-down:
 	kind delete cluster --name $(KIND_CLUSTER)
 
 dev-load:
+	cd zarf/k8s/dev/sales; kustomize edit set image service-image=$(SERVICE_IMAGE)
 	kind load docker-image $(SERVICE_IMAGE) --name $(KIND_CLUSTER)
 
 dev-apply:
