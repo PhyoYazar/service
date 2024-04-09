@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/PhyoYazar/service/business/web/auth"
 	v1 "github.com/PhyoYazar/service/business/web/v1"
 	"github.com/PhyoYazar/service/foundation/web"
 	"go.uber.org/zap"
@@ -29,6 +30,13 @@ func Errors(log *zap.SugaredLogger) web.Middleware {
 					}
 					status = reqErr.Status
 
+				case auth.IsAuthError(err):
+					er = v1.ErrorResponse{
+						Error: http.StatusText(http.StatusUnauthorized),
+					}
+					status = http.StatusUnauthorized
+
+					
 				default:
 					er = v1.ErrorResponse{
 						Error: http.StatusText(http.StatusInternalServerError),
