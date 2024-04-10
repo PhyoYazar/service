@@ -23,6 +23,11 @@ spec:
     spec:
       terminationGracePeriodSeconds: 60
 
+      initContainers:
+        - name: init-migrate
+          image: service-image
+          command: ["./admin"]
+
       containers:
         - name: sales-api
           image: service-image
@@ -33,25 +38,25 @@ spec:
             - name: sales-api-debug
               containerPort: 4000
 
-              readinessProbe: # readiness probes mark the service available to accept traffic.
-                httpGet:
-                  path: /debug/readiness
-                  port: 4000
-                initialDelaySeconds: 2
-                periodSeconds: 15
-                timeoutSeconds: 5
-                successThreshold: 1
-                failureThreshold: 2
+          readinessProbe: # readiness probes mark the service available to accept traffic.
+            httpGet:
+              path: /debug/readiness
+              port: 4000
+            initialDelaySeconds: 2
+            periodSeconds: 15
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 2
 
-              livenessProbe: # liveness probes mark the service alive or dead (to be restarted).
-                httpGet:
-                  path: /debug/liveness
-                  port: 4000
-                initialDelaySeconds: 2
-                periodSeconds: 30
-                timeoutSeconds: 5
-                successThreshold: 1
-                failureThreshold: 2
+          livenessProbe: # liveness probes mark the service alive or dead (to be restarted).
+            httpGet:
+              path: /debug/liveness
+              port: 4000
+            initialDelaySeconds: 2
+            periodSeconds: 30
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 2
 
           env:
             - name: GOMAXPROCS
