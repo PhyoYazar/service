@@ -21,7 +21,6 @@ type Handlers struct {
 func (h Handlers) Readiness(w http.ResponseWriter, r *http.Request) {
 	statusCode := http.StatusOK
 
-
 	data := struct {
 		Status string `json:"status"`
 	}{
