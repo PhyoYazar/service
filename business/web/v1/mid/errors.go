@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/PhyoYazar/service/business/sys/validate"
 	"github.com/PhyoYazar/service/business/web/auth"
 	v1 "github.com/PhyoYazar/service/business/web/v1"
 	"github.com/PhyoYazar/service/foundation/web"
@@ -23,6 +24,14 @@ func Errors(log *zap.SugaredLogger) web.Middleware {
 				var status int
 
 				switch {
+				case validate.IsFieldErrors(err):
+					fieldErrors := validate.GetFieldErrors(err)
+					er = v1.ErrorResponse{
+						Error:  "data validation error",
+						Fields: fieldErrors.Fields(),
+					}
+					status = http.StatusBadRequest
+
 				case v1.IsRequestError(err):
 					reqErr := v1.GetRequestError(err)
 					er = v1.ErrorResponse{
@@ -36,7 +45,6 @@ func Errors(log *zap.SugaredLogger) web.Middleware {
 					}
 					status = http.StatusUnauthorized
 
-					
 				default:
 					er = v1.ErrorResponse{
 						Error: http.StatusText(http.StatusInternalServerError),
