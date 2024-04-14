@@ -57,9 +57,7 @@ service:
 # Running from within k8s/kind
 
 dev-pyz:
-	kind load docker-image $(TELEPRESENCE) --name $(KIND_CLUSTER)
-	telepresence --context=kind-$(KIND_CLUSTER) helm install
-	telepresence --context=kind-$(KIND_CLUSTER) connect
+	kind load docker-image $(POSTGRES) --name $(KIND_CLUSTER)
 
 dev-up-local:
 	kind create cluster \
@@ -70,6 +68,7 @@ dev-up-local:
 	kubectl.docker wait --timeout=120s --namespace=local-path-storage --for=condition=Available deployment/local-path-provisioner
 
 	kind load docker-image $(TELEPRESENCE) --name $(KIND_CLUSTER)
+	kind load docker-image $(POSTGRES) --name $(KIND_CLUSTER)
 
 dev-up: dev-up-local
 	telepresence --context=kind-$(KIND_CLUSTER) helm install
@@ -86,6 +85,9 @@ dev-load:
 	kind load docker-image $(SERVICE_IMAGE) --name $(KIND_CLUSTER)
 
 dev-apply:
+	kustomize build zarf/k8s/dev/database | kubectl.docker apply -f -
+	kubectl.docker rollout status --namespace=$(NAMESPACE) --watch --timeout=120s sts/database
+
 	kustomize build zarf/k8s/dev/sales | kubectl.docker apply -f -
 	kubectl.docker wait pods --namespace=$(NAMESPACE) --selector app=$(APP) --for=condition=Ready
 
@@ -167,3 +169,9 @@ readiness-local:
 
 readiness:
 	curl -il http://$(SERVICE_NAME).$(NAMESPACE).svc.cluster.local:4000/debug/readiness
+
+pgcli-local:
+	pgcli postgresql://postgres:postgres@localhost
+
+pgcli:
+	pgcli postgresql://postgres:postgres@database-service.$(NAMESPACE).svc.cluster.local
