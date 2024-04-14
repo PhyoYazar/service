@@ -9,6 +9,7 @@ import (
 	"github.com/PhyoYazar/service/business/web/auth"
 	"github.com/PhyoYazar/service/business/web/v1/mid"
 	"github.com/PhyoYazar/service/foundation/web"
+	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 )
 
@@ -18,6 +19,7 @@ type APIMuxConfig struct {
 	Shutdown chan os.Signal
 	Log      *zap.SugaredLogger
 	Auth 		*auth.Auth
+	DB       *sqlx.DB
 }
 
 // A Handler is a type that handles a http request within our own little mini
