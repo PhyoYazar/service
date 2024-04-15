@@ -117,7 +117,7 @@ dev-describe-sales:
 	kubectl.docker describe pod --namespace=$(NAMESPACE) -l app=$(APP)
 
 dev-logs-init:
-	kubectl logs --namespace=$(NAMESPACE) -l app=$(APP) -f --tail=100 -c init-migrate
+	kubectl.docker logs --namespace=$(NAMESPACE) -l app=$(APP) -f --tail=100 -c init-migrate
 
 # ==============================================================================
 
