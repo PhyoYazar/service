@@ -66,7 +66,8 @@ func run(log *zap.SugaredLogger) error {
 		DB struct {
 			User         string `conf:"default:postgres"`
 			Password     string `conf:"default:postgres,mask"`
-			Host         string `conf:"default:database-service.sales-system.svc.cluster.local"`
+			// Host         string `conf:"default:database-service.sales-system.svc.cluster.local"`
+			Host         string `conf:"default:localhost"`
 			Name         string `conf:"default:postgres"`
 			MaxIdleConns int    `conf:"default:2"`
 			MaxOpenConns int    `conf:"default:0"`

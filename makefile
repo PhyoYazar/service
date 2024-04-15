@@ -116,6 +116,9 @@ dev-describe-deployment:
 dev-describe-sales:
 	kubectl.docker describe pod --namespace=$(NAMESPACE) -l app=$(APP)
 
+dev-logs-init:
+	kubectl logs --namespace=$(NAMESPACE) -l app=$(APP) -f --tail=100 -c init-migrate
+
 # ==============================================================================
 
 run-scratch:
@@ -175,3 +178,6 @@ pgcli-local:
 
 pgcli:
 	pgcli postgresql://postgres:postgres@database-service.$(NAMESPACE).svc.cluster.local
+
+migrate:
+	go run app/tooling/admin/main.go
